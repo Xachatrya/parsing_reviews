@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>О! печатка — анализ бизнеса и витрина услуг</title>
+  <meta name="description" content="Анализ бизнеса и карточки товаров копицентра О! печатка в ЖК Бутово Парк" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #14181c;
+      --muted: #5a656e;
+      --paper: #efebe3;
+      --surface: #fffdf8;
+      --line: #ddd5c8;
+      --teal: #0e6f63;
+      --teal-deep: #0a4f47;
+      --amber: #c67a12;
+      --soft: #dceeea;
+      --rose: #f3e7dc;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Manrope, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.5;
+    }
+    a { color: inherit; }
+    img { max-width: 100%; display: block; }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(14px);
+      background: rgba(239, 235, 227, 0.86);
+      border-bottom: 1px solid rgba(221, 213, 200, 0.8);
+    }
+    .nav-inner {
+      width: min(1120px, calc(100% - 2rem));
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.85rem 0;
+    }
+    .nav-brand {
+      font-family: Unbounded, sans-serif;
+      font-weight: 700;
+      text-decoration: none;
+      letter-spacing: -0.03em;
+    }
+    .nav-brand span { color: var(--teal); }
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem 1rem;
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+    .nav-links a { text-decoration: none; color: var(--muted); }
+    .nav-links a:hover { color: var(--ink); }
+
+    .hero {
+      position: relative;
+      min-height: 92vh;
+      display: grid;
+      align-items: end;
+      overflow: hidden;
+      color: #f7fffc;
+      background:
+        linear-gradient(120deg, rgba(10, 40, 37, 0.82), rgba(14, 111, 99, 0.55)),
+        url("https://avatars.mds.yandex.net/get-altay/16338459/2a0000019a46821b3ae968a577579218115f/XXL_height") center/cover no-repeat;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 28%;
+      background: linear-gradient(transparent, rgba(10, 30, 28, 0.55));
+      pointer-events: none;
+    }
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      width: min(1120px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 5rem 0 3.5rem;
+      animation: rise 0.9s ease both;
+    }
+    .hero h1 {
+      font-family: Unbounded, sans-serif;
+      font-size: clamp(2.8rem, 8vw, 5.6rem);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      margin: 0 0 1rem;
+      max-width: 10ch;
+    }
+    .hero h1 span { color: #9be7d8; }
+    .hero-lead {
+      max-width: 34rem;
+      font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+      margin: 0 0 1.5rem;
+      color: rgba(247, 255, 252, 0.9);
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-weight: 700;
+      padding: 0.9rem 1.2rem;
+      border: 1px solid transparent;
+      transition: 0.2s ease;
+    }
+    .btn-primary { background: #fff; color: var(--teal-deep); }
+    .btn-primary:hover { transform: translateY(-2px); }
+    .btn-ghost {
+      background: transparent;
+      color: #fff;
+      border-color: rgba(255,255,255,0.45);
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.1); }
+
+    section {
+      width: min(1120px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 4rem 0;
+    }
+    .section-kicker {
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin: 0 0 0.6rem;
+    }
+    .section-title {
+      font-family: Unbounded, sans-serif;
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      letter-spacing: -0.03em;
+      margin: 0 0 0.75rem;
+      max-width: 18ch;
+    }
+    .section-lead {
+      margin: 0 0 2rem;
+      color: var(--muted);
+      max-width: 40rem;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .stat {
+      padding: 1.1rem 0;
+      border-top: 2px solid var(--ink);
+      animation: rise 0.7s ease both;
+    }
+    .stat b {
+      display: block;
+      font-family: Unbounded, sans-serif;
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      letter-spacing: -0.03em;
+    }
+    .stat span { color: var(--muted); font-size: 0.92rem; }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 2rem;
+      align-items: start;
+    }
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      padding: 1.4rem;
+    }
+    .panel h3 {
+      font-family: Unbounded, sans-serif;
+      font-size: 1.05rem;
+      margin: 0 0 0.8rem;
+    }
+    .panel ul { margin: 0; padding-left: 1.1rem; color: var(--muted); }
+    .panel li + li { margin-top: 0.35rem; }
+
+    .swot {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    .swot article {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      padding: 1.25rem;
+      min-height: 160px;
+    }
+    .swot h3 {
+      margin: 0 0 0.6rem;
+      font-family: Unbounded, sans-serif;
+      font-size: 1rem;
+    }
+    .swot p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+    .swot .s { border-top: 3px solid var(--teal); }
+    .swot .w { border-top: 3px solid #b45309; }
+    .swot .o { border-top: 3px solid #2563eb; }
+    .swot .t { border-top: 3px solid #be123c; }
+
+    .segments {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.8rem;
+    }
+    .seg {
+      background: linear-gradient(180deg, var(--surface), var(--rose));
+      border: 1px solid var(--line);
+      padding: 1rem;
+      min-height: 120px;
+    }
+    .seg strong {
+      display: block;
+      font-family: Unbounded, sans-serif;
+      font-size: 0.92rem;
+      margin-bottom: 0.4rem;
+    }
+    .seg span { color: var(--muted); font-size: 0.86rem; }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .filters button {
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--ink);
+      padding: 0.55rem 0.85rem;
+      font: inherit;
+      font-weight: 650;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+    .filters button:hover,
+    .filters button.active {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: #fff;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 1rem;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      padding: 1.15rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      min-height: 100%;
+      box-shadow: 0 10px 30px rgba(20, 24, 28, 0.05);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      animation: rise 0.55s ease both;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 40px rgba(20, 24, 28, 0.1);
+    }
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.6rem;
+      align-items: start;
+    }
+    .cat {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--teal);
+      background: var(--soft);
+      padding: 0.28rem 0.5rem;
+    }
+    .price {
+      font-family: Unbounded, sans-serif;
+      color: var(--amber);
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+    .card h3 {
+      font-family: Unbounded, sans-serif;
+      font-size: 1.05rem;
+      margin: 0;
+      letter-spacing: -0.02em;
+    }
+    .card .short { margin: 0; color: var(--muted); font-size: 0.92rem; }
+    .card .desc { margin: 0; font-size: 0.9rem; flex: 1; }
+    .card ul {
+      margin: 0;
+      padding-left: 1.05rem;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+    .usps { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+    .usp {
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: #fff1de;
+      color: #8a5408;
+      padding: 0.25rem 0.45rem;
+    }
+    .cta {
+      margin-top: auto;
+      display: inline-flex;
+      justify-content: center;
+      text-decoration: none;
+      background: var(--teal);
+      color: #fff;
+      font-weight: 750;
+      padding: 0.75rem 0.9rem;
+    }
+    .cta:hover { background: var(--teal-deep); }
+
+    .pkg-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 1rem;
+    }
+    .pkg {
+      background: linear-gradient(155deg, #123c36, #0e6f63 70%, #1a8577);
+      color: #f4fffc;
+      padding: 1.25rem;
+      min-height: 190px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      animation: rise 0.6s ease both;
+    }
+    .pkg h3 {
+      font-family: Unbounded, sans-serif;
+      font-size: 1.05rem;
+      margin: 0;
+    }
+    .pkg p { margin: 0; opacity: 0.92; font-size: 0.9rem; }
+    .pkg .price { color: #ffd89a; margin-top: auto; }
+
+    .recs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    .rec {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      padding: 1.25rem;
+    }
+    .rec h3 {
+      font-family: Unbounded, sans-serif;
+      font-size: 1rem;
+      margin: 0 0 0.6rem;
+    }
+    .rec p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+
+    .contact {
+      background:
+        radial-gradient(circle at 0% 0%, #d8efe9, transparent 45%),
+        radial-gradient(circle at 100% 20%, #f6e4c5, transparent 40%),
+        var(--paper);
+      border-top: 1px solid var(--line);
+    }
+    .contact-inner {
+      width: min(1120px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 4rem 0;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    .contact h2 {
+      font-family: Unbounded, sans-serif;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      margin: 0 0 0.8rem;
+      letter-spacing: -0.03em;
+    }
+    .contact p { margin: 0 0 1rem; color: var(--muted); }
+    .contact-box {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      padding: 1.3rem;
+    }
+    .contact-box a {
+      display: block;
+      text-decoration: none;
+      font-weight: 700;
+      margin: 0.35rem 0;
+    }
+
+    footer {
+      width: min(1120px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 1.25rem 0 2.5rem;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    @media (max-width: 900px) {
+      .stats, .segments, .recs { grid-template-columns: 1fr 1fr; }
+      .split, .contact-inner, .swot { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+    @media (max-width: 560px) {
+      .stats, .segments, .recs { grid-template-columns: 1fr; }
+      .hero { min-height: 85vh; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="nav-brand" href="#top">О! <span>печатка</span></a>
+      <div class="nav-links">
+        <a href="#analiz">Анализ</a>
+        <a href="#uslugi">Услуги</a>
+        <a href="#pakety">Пакеты</a>
+        <a href="#rekomendacii">Рекомендации</a>
+        <a href="#kontakty">Контакты</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero" id="top">
+    <div class="hero-inner">
+      <h1>О! <span>печатка</span></h1>
+      <p class="hero-lead">Качественно. Быстро. У дома в Бутово Парк — анализ бизнеса и готовая витрина из 19 услуг.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#uslugi">Смотреть карточки</a>
+        <a class="btn btn-ghost" href="#analiz">Читать анализ</a>
+      </div>
+    </div>
+  </header>
+
+  <section id="analiz">
+    <p class="section-kicker">Бизнес-анализ</p>
+    <h2 class="section-title">Локальный лидер с рейтингом 5,0</h2>
+    <p class="section-lead">Копицентр и фотосалон в ЖК Бутово Парк, 18. Ребрендинг с ноября 2025. Награда «Хорошее место 2026». Суть: one-stop shop у дома — от ксерокопии до печатей, холстов и B2B.</p>
+
+    <div class="stats">
+      <div class="stat"><b>5,0</b><span>рейтинг · 345 оценок</span></div>
+      <div class="stat" style="animation-delay:.05s"><b>230</b><span>отзывов на Картах</span></div>
+      <div class="stat" style="animation-delay:.1s"><b>95%</b><span>довольных временем ожидания</span></div>
+      <div class="stat" style="animation-delay:.15s"><b>19</b><span>карточек услуг в витрине</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="split">
+      <div>
+        <p class="section-kicker">Рынок</p>
+        <h2 class="section-title">Почему выигрывает точка в ЖК</h2>
+        <p class="section-lead">Плотный рынок копицентров рядом, но «О! печатка» держит преимущество за счёт рейтинга, скорости и широты ассортимента.</p>
+        <div class="panel">
+          <h3>Сильные стороны локации</h3>
+          <ul>
+            <li>Внутри жилого комплекса → постоянный пешеходный трафик</li>
+            <li>Симферопольское шоссе ~133 м, МЦД Бутово ~1,3 км</li>
+            <li>Пандус, лифт, доступность для колясок</li>
+            <li>Работа до 20:00 — удобно после работы</li>
+          </ul>
+        </div>
+      </div>
+      <div class="swot">
+        <article class="s"><h3>S — Сильные</h3><p>Рейтинг 5,0, скорость, широкий ассортимент, локация во дворе, онлайн-заказ.</p></article>
+        <article class="w"><h3>W — Слабые</h3><p>Зависимость от смены, спорные тарифы на фото на документы, часть цен «от 1 ₽».</p></article>
+        <article class="o"><h3>O — Возможности</h3><p>Пакеты для ЖК и ИП, Telegram-акции, подарочные наборы, студенческий сезон.</p></article>
+        <article class="t"><h3>T — Угрозы</h3><p>Сетевые конкуренты, онлайн-лаборатории, резонансный негатив с одной смены.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-kicker">Аудитория</p>
+    <h2 class="section-title">Пять сегментов спроса</h2>
+    <p class="section-lead">От бытовых копий до старта ИП — разные чеки, одна точка входа.</p>
+    <div class="segments">
+      <div class="seg"><strong>Жители ЖК</strong><span>Фото, документы, бытовые копии</span></div>
+      <div class="seg"><strong>Студенты</strong><span>Дипломы, чертежи, брошюры</span></div>
+      <div class="seg"><strong>ИП и бизнес</strong><span>Печати, визитки, вывески</span></div>
+      <div class="seg"><strong>Семьи</strong><span>Архив фото, холсты, кружки</span></div>
+      <div class="seg"><strong>Срочные</strong><span>Паспорт и виза «здесь и сейчас»</span></div>
+    </div>
+  </section>
+
+  <section id="uslugi">
+    <p class="section-kicker">Витрина</p>
+    <h2 class="section-title">Карточки товаров и услуг</h2>
+    <p class="section-lead">Готовые тексты с прайсом и УТП — можно публиковать на Яндекс.Картах и сайте.</p>
+    <div class="filters" id="filters"></div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section id="pakety">
+    <p class="section-kicker">Акции</p>
+    <h2 class="section-title">Пакеты для роста среднего чека</h2>
+    <p class="section-lead">Собранные офферы на базе текущего прайса.</p>
+    <div class="pkg-grid" id="packages"></div>
+  </section>
+
+  <section id="rekomendacii">
+    <p class="section-kicker">Что делать дальше</p>
+    <h2 class="section-title">Три приоритета</h2>
+    <div class="recs">
+      <article class="rec">
+        <h3>Операционка</h3>
+        <p>Стандарт фото на документы и отдельный тариф «печать готового файла 3×4» — снять главный источник конфликтов.</p>
+      </article>
+      <article class="rec">
+        <h3>Маркетинг</h3>
+        <p>УТП «Качественно. Быстро. У дома». Пакеты на витрине и приём файлов через Telegram.</p>
+      </article>
+      <article class="rec">
+        <h3>Карточки</h3>
+        <p>Обновить прайс на Картах: конкретные цены, сроки, фото работ — без «1 ₽».</p>
+      </article>
+    </div>
+  </section>
+
+  <div class="contact" id="kontakty">
+    <div class="contact-inner">
+      <div>
+        <h2>О! печатка</h2>
+        <p>пгт Бутово, ЖК Бутово Парк, 18 · копицентр и фотосалон</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="tel:+79096670055">Позвонить</a>
+          <a class="btn btn-ghost" style="color:var(--ink);border-color:var(--line)" href="https://t.me/opechatkabp" target="_blank" rel="noopener">Telegram</a>
+        </div>
+      </div>
+      <div class="contact-box">
+        <a href="tel:+79096670055">+7 (909) 667-00-55</a>
+        <a href="https://t.me/opechatkabp" target="_blank" rel="noopener">t.me/opechatkabp</a>
+        <a href="https://yandex.ru/maps/-/CTBfVV3z" target="_blank" rel="noopener">Открыть на Яндекс.Картах</a>
+        <p style="margin-top:0.8rem;color:var(--muted);font-size:0.9rem">Работаем до 20:00 · оплата картой · Wi‑Fi</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Материалы подготовлены по данным Яндекс.Карт · 11 июля 2026 · перед публикацией сверьте актуальные цены с точкой
+  </footer>
+
+  <script src="./data.js"></script>
+  <script>
+    const data = window.OPECHATKA_DATA;
+    const categoryOrder = ["Все","Фотоуслуги","Фотопечать","Копицентр","Печати и штампы","Типография","Широкоформат","Сувениры","Дизайн","Документы","Оцифровка","Учёба","Оформление"];
+    let active = "Все";
+
+    const filters = document.getElementById("filters");
+    const grid = document.getElementById("grid");
+    const packages = document.getElementById("packages");
+
+    const cats = categoryOrder.filter((c) => c === "Все" || data.cards.some((card) => card.category === c));
+
+    function renderFilters() {
+      filters.innerHTML = cats.map((c) => `<button type="button" class="${c === active ? "active" : ""}" data-cat="${c}">${c}</button>`).join("");
+    }
+
+    function renderCards() {
+      const list = active === "Все" ? data.cards : data.cards.filter((c) => c.category === active);
+      grid.innerHTML = list.map((card, i) => `
+        <article class="card" style="animation-delay:${i * 0.03}s">
+          <div class="card-top">
+            <span class="cat">${card.category}</span>
+            <span class="price">${card.price_label}</span>
+          </div>
+          <h3>${card.title}</h3>
+          <p class="short">${card.short}</p>
+          <p class="desc">${card.description}</p>
+          <ul>${card.variants.slice(0, 4).map((v) => `<li>${v}</li>`).join("")}</ul>
+          <div class="usps">${(card.usp || []).map((u) => `<span class="usp">${u}</span>`).join("")}</div>
+          <a class="cta" href="tel:+79096670055">${card.cta}</a>
+        </article>`).join("");
+    }
+
+    packages.innerHTML = data.packages.map((p, i) => `
+      <div class="pkg" style="animation-delay:${i * 0.05}s">
+        <h3>${p.title}</h3>
+        <p>${p.items.join(" · ")}</p>
+        <p>${p.for}</p>
+        <span class="price">${p.price_label}</span>
+      </div>`).join("");
+
+    filters.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-cat]");
+      if (!btn) return;
+      active = btn.dataset.cat;
+      renderFilters();
+      renderCards();
+    });
+
+    renderFilters();
+    renderCards();
+  </script>
+</body>
+</html>
