@@ -1,0 +1,795 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080a0d">
+  <title>Сборка лестницы на монокосоуре</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080a0d;
+      --panel: rgba(18, 22, 27, 0.82);
+      --line: rgba(255, 255, 255, 0.12);
+      --text: #f4f2ed;
+      --muted: #9299a2;
+      --accent: #ff6b2c;
+      --accent-soft: #ffb08c;
+      --steel: #252c34;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow: hidden;
+    }
+
+    body::before {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      content: "";
+      background:
+        radial-gradient(circle at 72% 35%, rgba(255, 107, 44, 0.09), transparent 32%),
+        radial-gradient(circle at 22% 72%, rgba(79, 121, 139, 0.09), transparent 30%),
+        linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+      background-size: auto, auto, 44px 44px, 44px 44px;
+      mask-image: linear-gradient(to bottom, black, transparent 85%);
+    }
+
+    .app {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      min-height: 640px;
+      isolation: isolate;
+    }
+
+    header {
+      position: absolute;
+      z-index: 5;
+      top: 38px;
+      left: clamp(24px, 5vw, 76px);
+      max-width: 550px;
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      color: var(--accent-soft);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.19em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      width: 28px;
+      height: 1px;
+      content: "";
+      background: var(--accent);
+      box-shadow: 0 0 14px var(--accent);
+    }
+
+    h1 {
+      max-width: 520px;
+      margin: 0;
+      font-size: clamp(32px, 4.5vw, 68px);
+      font-weight: 540;
+      letter-spacing: -0.055em;
+      line-height: 0.96;
+    }
+
+    h1 span {
+      color: var(--muted);
+      font-weight: 350;
+    }
+
+    .subtitle {
+      max-width: 420px;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    #scene {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+      touch-action: none;
+    }
+
+    #scene:active {
+      cursor: grabbing;
+    }
+
+    .step-card {
+      position: absolute;
+      z-index: 6;
+      top: 42px;
+      right: clamp(24px, 5vw, 76px);
+      width: 220px;
+      padding: 17px 18px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.26);
+      backdrop-filter: blur(18px);
+    }
+
+    .step-number {
+      margin-bottom: 7px;
+      color: var(--accent);
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .step-title {
+      font-size: 17px;
+      font-weight: 610;
+    }
+
+    .step-hint {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .controls {
+      position: absolute;
+      z-index: 7;
+      right: clamp(20px, 5vw, 76px);
+      bottom: 34px;
+      left: clamp(20px, 5vw, 76px);
+      display: grid;
+      grid-template-columns: auto minmax(120px, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(15, 18, 22, 0.86);
+      box-shadow: 0 20px 70px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(20px);
+    }
+
+    button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      height: 42px;
+      padding: 0 17px;
+      border: 0;
+      border-radius: 11px;
+      background: var(--text);
+      color: #111318;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 160ms ease, background 160ms ease;
+    }
+
+    button:hover {
+      background: white;
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    button svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+    }
+
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      min-width: 0;
+    }
+
+    .timeline-meta {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 650;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 3px;
+      margin: 0;
+      appearance: none;
+      border-radius: 999px;
+      outline: none;
+      background: linear-gradient(to right, var(--accent) var(--progress, 0%), rgba(255,255,255,.15) var(--progress, 0%));
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      width: 14px;
+      height: 14px;
+      appearance: none;
+      border: 3px solid #111318;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 1px rgba(255,255,255,.3), 0 0 14px rgba(255,107,44,.6);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 10px;
+      height: 10px;
+      border: 3px solid #111318;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 1px rgba(255,255,255,.3), 0 0 14px rgba(255,107,44,.6);
+    }
+
+    .view-hint {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .view-hint svg {
+      width: 18px;
+      stroke: currentColor;
+    }
+
+    .disclaimer {
+      position: absolute;
+      z-index: 5;
+      right: clamp(24px, 5vw, 76px);
+      bottom: 112px;
+      color: rgba(255,255,255,.28);
+      font-size: 9px;
+      letter-spacing: .04em;
+      pointer-events: none;
+    }
+
+    @media (max-width: 720px) {
+      .app {
+        min-height: 580px;
+      }
+
+      header {
+        top: 24px;
+      }
+
+      h1 {
+        max-width: 300px;
+        font-size: 37px;
+      }
+
+      .subtitle,
+      .step-hint {
+        display: none;
+      }
+
+      .step-card {
+        top: 126px;
+        right: 20px;
+        width: auto;
+        max-width: 180px;
+        padding: 11px 13px;
+      }
+
+      .step-title {
+        font-size: 13px;
+      }
+
+      .controls {
+        grid-template-columns: auto 1fr;
+        gap: 12px;
+        bottom: 18px;
+        padding: 10px;
+      }
+
+      .view-hint,
+      .disclaimer {
+        display: none;
+      }
+
+      button {
+        width: 44px;
+        padding: 0;
+      }
+
+      button span {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div class="eyebrow">Интерактивная 3D-схема</div>
+      <h1>Лестница <span>на монокосоуре</span></h1>
+      <p class="subtitle">Поэтапная сборка центральной стальной балки, опорных кронштейнов, деревянных ступеней и болтового крепежа.</p>
+    </header>
+
+    <canvas id="scene" aria-label="Анимация сборки лестницы на монокосоуре"></canvas>
+
+    <aside class="step-card" aria-live="polite">
+      <div class="step-number" id="stepNumber">Этап 01 / 04</div>
+      <div class="step-title" id="stepTitle">Монтаж монокосоура</div>
+      <div class="step-hint" id="stepHint">Несущая балка занимает проектное положение.</div>
+    </aside>
+
+    <div class="disclaimer">Концептуальная визуализация — не монтажная инструкция</div>
+
+    <section class="controls" aria-label="Управление анимацией">
+      <button id="playButton" type="button" aria-label="Приостановить анимацию">
+        <svg id="playIcon" viewBox="0 0 20 20" aria-hidden="true">
+          <path d="M6 4h3v12H6zm5 0h3v12h-3z"/>
+        </svg>
+        <span id="playLabel">Пауза</span>
+      </button>
+
+      <label class="timeline">
+        <span class="timeline-meta">
+          <span>Сборка</span>
+          <span id="percentage">0%</span>
+        </span>
+        <input id="scrubber" type="range" min="0" max="1000" value="0" aria-label="Ход сборки">
+      </label>
+
+      <div class="view-hint">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M8 11V7a1.5 1.5 0 0 1 3 0v3-5a1.5 1.5 0 0 1 3 0v5-3a1.5 1.5 0 0 1 3 0v4-2a1.5 1.5 0 0 1 3 0v5c0 4-2.5 7-7 7h-1c-2 0-3.2-.8-4.3-2.1L4.4 15a1.6 1.6 0 0 1 2.3-2.2L8 14" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Потяните для поворота
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const canvas = document.querySelector("#scene");
+      const ctx = canvas.getContext("2d");
+      const scrubber = document.querySelector("#scrubber");
+      const playButton = document.querySelector("#playButton");
+      const playLabel = document.querySelector("#playLabel");
+      const playIcon = document.querySelector("#playIcon");
+      const percentage = document.querySelector("#percentage");
+      const stepNumber = document.querySelector("#stepNumber");
+      const stepTitle = document.querySelector("#stepTitle");
+      const stepHint = document.querySelector("#stepHint");
+
+      const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const requestedProgress = Number.parseFloat(new URLSearchParams(location.search).get("progress"));
+      const steps = [
+        ["Этап 01 / 04", "Монтаж монокосоура", "Несущая балка занимает проектное положение."],
+        ["Этап 02 / 04", "Установка кронштейнов", "Опорные площадки крепятся к центральной балке."],
+        ["Этап 03 / 04", "Укладка ступеней", "Ступени последовательно опускаются на опоры."],
+        ["Этап 04 / 04", "Затяжка болтов", "Крепёж фиксирует каждую ступень на кронштейне."]
+      ];
+
+      let width = 0;
+      let height = 0;
+      let dpr = 1;
+      let progress = Number.isFinite(requestedProgress)
+        ? Math.min(1, Math.max(0, requestedProgress / 100))
+        : prefersReducedMotion ? 1 : 0;
+      let playing = !prefersReducedMotion;
+      let lastTime = performance.now();
+      let cameraAngle = -0.73;
+      let targetAngle = cameraAngle;
+      let dragging = false;
+      let dragStartX = 0;
+      let dragStartAngle = 0;
+      let userRotated = false;
+
+      const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
+      const smooth = value => {
+        const x = clamp(value);
+        return x * x * (3 - 2 * x);
+      };
+      const phase = (start, end) => smooth((progress - start) / (end - start));
+      const mix = (a, b, amount) => a + (b - a) * amount;
+      const add = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
+      const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+      const scale = (vector, amount) => vector.map(value => value * amount);
+      const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+      const cross = (a, b) => [
+        a[1] * b[2] - a[2] * b[1],
+        a[2] * b[0] - a[0] * b[2],
+        a[0] * b[1] - a[1] * b[0]
+      ];
+      const normalize = vector => {
+        const length = Math.hypot(...vector) || 1;
+        return scale(vector, 1 / length);
+      };
+
+      function resize() {
+        dpr = Math.min(devicePixelRatio || 1, 2);
+        width = innerWidth;
+        height = innerHeight;
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      function camera() {
+        const compact = width < 720;
+        const radius = compact ? 10.8 : 10.1;
+        const eye = [
+          Math.cos(cameraAngle) * radius,
+          compact ? 4.9 : 4.7,
+          Math.sin(cameraAngle) * radius
+        ];
+        const target = compact ? [0.25, 1.7, 0] : [0.15, 1.65, 0];
+        const forward = normalize(sub(target, eye));
+        const right = normalize(cross(forward, [0, 1, 0]));
+        const up = cross(right, forward);
+        return { eye, forward, right, up };
+      }
+
+      function project(point, cam) {
+        const relative = sub(point, cam.eye);
+        const depth = dot(relative, cam.forward);
+        const focal = Math.min(width, height) * (width < 720 ? 1.18 : 1.08);
+        const horizontalOffset = width < 720 ? 0 : width * 0.085;
+        return {
+          x: width / 2 + horizontalOffset + dot(relative, cam.right) * focal / depth,
+          y: height * (width < 720 ? 0.56 : 0.55) - dot(relative, cam.up) * focal / depth,
+          depth
+        };
+      }
+
+      function shade(hex, amount) {
+        const normalized = hex.replace("#", "");
+        const number = parseInt(normalized, 16);
+        const r = clamp((number >> 16) + amount, 0, 255);
+        const g = clamp(((number >> 8) & 255) + amount, 0, 255);
+        const b = clamp((number & 255) + amount, 0, 255);
+        return `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`;
+      }
+
+      function polygonFace(points, color, opacity = 1, stroke = null) {
+        return { points, color, opacity, stroke };
+      }
+
+      function prismFaces(center, axisA, axisB, axisC, color, opacity = 1) {
+        const vertices = [];
+        for (const a of [-1, 1]) {
+          for (const b of [-1, 1]) {
+            for (const c of [-1, 1]) {
+              vertices.push(add(center, add(scale(axisA, a), add(scale(axisB, b), scale(axisC, c)))));
+            }
+          }
+        }
+        const index = (a, b, c) => ((a ? 1 : 0) * 4) + ((b ? 1 : 0) * 2) + (c ? 1 : 0);
+        const definitions = [
+          [[[0,0,0],[0,0,1],[0,1,1],[0,1,0]], -13],
+          [[[1,0,0],[1,1,0],[1,1,1],[1,0,1]], 11],
+          [[[0,0,0],[1,0,0],[1,0,1],[0,0,1]], -23],
+          [[[0,1,0],[0,1,1],[1,1,1],[1,1,0]], 24],
+          [[[0,0,0],[0,1,0],[1,1,0],[1,0,0]], -7],
+          [[[0,0,1],[1,0,1],[1,1,1],[0,1,1]], 5]
+        ];
+        return definitions.map(([corners, light]) => polygonFace(
+          corners.map(([a,b,c]) => vertices[index(a,b,c)]),
+          shade(color, light),
+          opacity,
+          "rgba(255,255,255,.055)"
+        ));
+      }
+
+      function boxFaces(center, size, color, opacity = 1) {
+        return prismFaces(
+          center,
+          [size[0] / 2, 0, 0],
+          [0, size[1] / 2, 0],
+          [0, 0, size[2] / 2],
+          color,
+          opacity
+        );
+      }
+
+      function hexBoltFaces(center, radius, shaftHeight, headHeight, color, opacity, angle) {
+        const faces = [];
+        const sides = 6;
+        const bottomY = center[1] - shaftHeight;
+        const shaftRadius = radius * 0.48;
+        for (let i = 0; i < sides; i++) {
+          const a1 = angle + i * Math.PI * 2 / sides;
+          const a2 = angle + (i + 1) * Math.PI * 2 / sides;
+          faces.push(polygonFace([
+            [center[0] + Math.cos(a1) * shaftRadius, bottomY, center[2] + Math.sin(a1) * shaftRadius],
+            [center[0] + Math.cos(a2) * shaftRadius, bottomY, center[2] + Math.sin(a2) * shaftRadius],
+            [center[0] + Math.cos(a2) * shaftRadius, center[1], center[2] + Math.sin(a2) * shaftRadius],
+            [center[0] + Math.cos(a1) * shaftRadius, center[1], center[2] + Math.sin(a1) * shaftRadius]
+          ], shade(color, i % 2 ? -12 : 8), opacity));
+        }
+        const topY = center[1] + headHeight;
+        const ring = Array.from({ length: sides }, (_, i) => {
+          const angleAtPoint = angle + i * Math.PI * 2 / sides;
+          return [center[0] + Math.cos(angleAtPoint) * radius, topY, center[2] + Math.sin(angleAtPoint) * radius];
+        });
+        faces.push(polygonFace(ring, shade(color, 24), opacity, "rgba(255,255,255,.18)"));
+        for (let i = 0; i < sides; i++) {
+          faces.push(polygonFace([
+            [ring[i][0], center[1], ring[i][2]],
+            [ring[(i + 1) % sides][0], center[1], ring[(i + 1) % sides][2]],
+            ring[(i + 1) % sides],
+            ring[i]
+          ], shade(color, i % 2 ? -6 : 14), opacity));
+        }
+        return faces;
+      }
+
+      function addGrid(cam) {
+        ctx.save();
+        ctx.lineWidth = 1;
+        for (let x = -7; x <= 7; x += 1) {
+          drawWorldLine([x, -0.48, -4.8], [x, -0.48, 4.8], cam, x === 0 ? 0.13 : 0.045);
+        }
+        for (let z = -5; z <= 5; z += 1) {
+          drawWorldLine([-7, -0.48, z], [7, -0.48, z], cam, z === 0 ? 0.13 : 0.045);
+        }
+        ctx.restore();
+      }
+
+      function drawWorldLine(from, to, cam, opacity) {
+        const a = project(from, cam);
+        const b = project(to, cam);
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.strokeStyle = `rgba(255,255,255,${opacity})`;
+        ctx.stroke();
+      }
+
+      function collectScene() {
+        const faces = [];
+        const beamProgress = phase(0.0, 0.19);
+        const beamStart = [-2.6 * (1 - beamProgress), -0.65 * (1 - beamProgress), 0];
+        const runVector = normalize([6.5, 3.62, 0]);
+        const beamLength = Math.hypot(6.5, 3.62);
+        const beamPerpendicular = normalize([-runVector[1], runVector[0], 0]);
+        const beamCenter = add([0, 1.58, 0], beamStart);
+        faces.push(...prismFaces(
+          beamCenter,
+          scale(runVector, beamLength / 2),
+          scale(beamPerpendicular, 0.18),
+          [0, 0, 0.22],
+          "#293139",
+          beamProgress
+        ));
+
+        const stepCount = 8;
+        for (let index = 0; index < stepCount; index++) {
+          const x = -2.8 + index * 0.8;
+          const y = 0.13 + index * 0.45;
+
+          const bracketStart = 0.13 + index * 0.018;
+          const bracketValue = phase(bracketStart, bracketStart + 0.25);
+          const side = index % 2 === 0 ? -1 : 1;
+          const bracketOffset = [
+            0,
+            0.15 * (1 - bracketValue),
+            side * 2.2 * (1 - bracketValue)
+          ];
+          const bracketOpacity = clamp(bracketValue * 1.6);
+          faces.push(...boxFaces(
+            add([x, y - 0.10, 0], bracketOffset),
+            [0.52, 0.11, 2.35],
+            "#4a545e",
+            bracketOpacity
+          ));
+          faces.push(...boxFaces(
+            add([x, y - 0.29, 0], bracketOffset),
+            [0.30, 0.38, 0.30],
+            "#333c45",
+            bracketOpacity
+          ));
+
+          const treadStart = 0.32 + index * 0.028;
+          const treadValue = phase(treadStart, treadStart + 0.29);
+          const treadOffsetY = (1 - treadValue) * (1.75 + index * 0.09);
+          const treadOffsetZ = Math.sin((1 - treadValue) * Math.PI) * 0.18;
+          faces.push(...boxFaces(
+            [x, y + 0.04 + treadOffsetY, treadOffsetZ],
+            [0.78, 0.16, 3.18],
+            "#a65a2e",
+            clamp(treadValue * 1.35)
+          ));
+
+          const boltStart = 0.56 + index * 0.023;
+          const boltValue = phase(boltStart, boltStart + 0.27);
+          const boltDrop = (1 - boltValue) * 1.25;
+          const boltAngle = (1 - boltValue) * Math.PI * 8;
+          for (const offsetX of [-0.21, 0.21]) {
+            for (const offsetZ of [-0.82, 0.82]) {
+              faces.push(...hexBoltFaces(
+                [x + offsetX, y + 0.18 + boltDrop, offsetZ],
+                0.085,
+                0.25,
+                0.055,
+                "#c8cbd0",
+                clamp(boltValue * 1.5),
+                boltAngle
+              ));
+            }
+          }
+        }
+
+        const footValue = phase(0.04, 0.2);
+        faces.push(...boxFaces([-3.28, -0.38, 0], [0.72, 0.10, 1.25], "#343d46", footValue));
+        faces.push(...boxFaces([3.27, 3.47, 0], [0.30, 0.82, 0.78], "#343d46", footValue));
+        return faces;
+      }
+
+      function drawFaces(faces, cam) {
+        const projected = faces.map(face => {
+          const points = face.points.map(point => project(point, cam));
+          return {
+            ...face,
+            projected: points,
+            depth: points.reduce((sum, point) => sum + point.depth, 0) / points.length
+          };
+        }).sort((a, b) => b.depth - a.depth);
+
+        for (const face of projected) {
+          if (face.opacity <= 0.001) continue;
+          ctx.beginPath();
+          face.projected.forEach((point, index) => {
+            if (index === 0) ctx.moveTo(point.x, point.y);
+            else ctx.lineTo(point.x, point.y);
+          });
+          ctx.closePath();
+          ctx.globalAlpha = face.opacity;
+          ctx.fillStyle = face.color;
+          ctx.fill();
+          if (face.stroke) {
+            ctx.strokeStyle = face.stroke;
+            ctx.lineWidth = 0.7;
+            ctx.stroke();
+          }
+        }
+        ctx.globalAlpha = 1;
+      }
+
+      function drawGlow(cam) {
+        const location = project([0, 1.35, 0], cam);
+        const gradient = ctx.createRadialGradient(location.x, location.y, 0, location.x, location.y, Math.min(width, height) * 0.36);
+        gradient.addColorStop(0, "rgba(255,107,44,.075)");
+        gradient.addColorStop(0.5, "rgba(255,107,44,.025)");
+        gradient.addColorStop(1, "rgba(255,107,44,0)");
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, width, height);
+      }
+
+      function updateInterface() {
+        const percent = Math.round(progress * 100);
+        percentage.textContent = `${percent}%`;
+        scrubber.value = Math.round(progress * 1000);
+        scrubber.style.setProperty("--progress", `${percent}%`);
+
+        const activeStep = progress < 0.2 ? 0 : progress < 0.43 ? 1 : progress < 0.69 ? 2 : 3;
+        const [number, title, hint] = steps[activeStep];
+        stepNumber.textContent = number;
+        stepTitle.textContent = title;
+        stepHint.textContent = hint;
+      }
+
+      function setPlayState(value) {
+        playing = value;
+        playButton.setAttribute("aria-label", playing ? "Приостановить анимацию" : "Продолжить анимацию");
+        playLabel.textContent = playing ? "Пауза" : progress >= 1 ? "Повторить" : "Продолжить";
+        playIcon.innerHTML = playing
+          ? '<path d="M6 4h3v12H6zm5 0h3v12h-3z"/>'
+          : '<path d="m6 4 10 6-10 6z"/>';
+      }
+
+      function render(time) {
+        const delta = Math.min((time - lastTime) / 1000, 0.05);
+        lastTime = time;
+
+        if (playing) {
+          progress += delta / 8.6;
+          if (progress >= 1) {
+            progress = 1;
+            setPlayState(false);
+          }
+        }
+
+        if (!dragging && !userRotated) {
+          targetAngle = -0.73 + Math.sin(time * 0.00018) * 0.075;
+        }
+        cameraAngle += (targetAngle - cameraAngle) * Math.min(1, delta * 8);
+
+        ctx.clearRect(0, 0, width, height);
+        const cam = camera();
+        drawGlow(cam);
+        addGrid(cam);
+        drawFaces(collectScene(), cam);
+        updateInterface();
+        requestAnimationFrame(render);
+      }
+
+      playButton.addEventListener("click", () => {
+        if (!playing && progress >= 1) progress = 0;
+        setPlayState(!playing);
+      });
+
+      scrubber.addEventListener("input", event => {
+        progress = Number(event.target.value) / 1000;
+        setPlayState(false);
+      });
+
+      canvas.addEventListener("pointerdown", event => {
+        dragging = true;
+        userRotated = true;
+        dragStartX = event.clientX;
+        dragStartAngle = targetAngle;
+        canvas.setPointerCapture(event.pointerId);
+      });
+
+      canvas.addEventListener("pointermove", event => {
+        if (!dragging) return;
+        targetAngle = dragStartAngle + (event.clientX - dragStartX) * 0.006;
+      });
+
+      const stopDragging = event => {
+        if (!dragging) return;
+        dragging = false;
+        if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
+      };
+      canvas.addEventListener("pointerup", stopDragging);
+      canvas.addEventListener("pointercancel", stopDragging);
+      canvas.addEventListener("dblclick", () => {
+        userRotated = false;
+        targetAngle = -0.73;
+      });
+
+      addEventListener("resize", resize);
+      resize();
+      setPlayState(playing);
+      render(performance.now());
+    })();
+  </script>
+</body>
+</html>
