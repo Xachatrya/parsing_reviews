@@ -396,6 +396,7 @@
       const stepHint = document.querySelector("#stepHint");
 
       const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const requestedProgress = Number.parseFloat(new URLSearchParams(location.search).get("progress"));
       const steps = [
         ["Этап 01 / 04", "Монтаж монокосоура", "Несущая балка занимает проектное положение."],
         ["Этап 02 / 04", "Установка кронштейнов", "Опорные площадки крепятся к центральной балке."],
@@ -406,7 +407,9 @@
       let width = 0;
       let height = 0;
       let dpr = 1;
-      let progress = prefersReducedMotion ? 1 : 0;
+      let progress = Number.isFinite(requestedProgress)
+        ? Math.min(1, Math.max(0, requestedProgress / 100))
+        : prefersReducedMotion ? 1 : 0;
       let playing = !prefersReducedMotion;
       let lastTime = performance.now();
       let cameraAngle = -0.73;
