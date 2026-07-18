@@ -788,7 +788,7 @@
       addEventListener("resize", resize);
       resize();
       setPlayState(playing);
-      requestAnimationFrame(render);
+      render(performance.now());
     })();
   </script>
 </body>
