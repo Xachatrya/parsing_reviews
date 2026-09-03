@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>XNR — Коммерческое предложение. Перекрытие приямка</title>
+  <style>
+    @font-face {
+      font-family: Inter;
+      font-weight: 400;
+      src: url("assets/fonts/inter-400.ttf") format("truetype");
+    }
+    @font-face {
+      font-family: Inter;
+      font-weight: 500;
+      src: url("assets/fonts/inter-500.ttf") format("truetype");
+    }
+    @font-face {
+      font-family: Inter;
+      font-weight: 600;
+      src: url("assets/fonts/inter-600.ttf") format("truetype");
+    }
+    @font-face {
+      font-family: Inter;
+      font-weight: 700;
+      src: url("assets/fonts/inter-700.ttf") format("truetype");
+    }
+
+    :root {
+      --bg: #162126;
+      --bg-2: #1b2a31;
+      --cream: #e6e4d8;
+      --muted: rgba(230, 228, 216, 0.58);
+      --line: rgba(230, 228, 216, 0.14);
+      --line-strong: rgba(230, 228, 216, 0.28);
+      --accent: #1faaff;
+      --accent-2: #6afefe;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    @page {
+      size: A4;
+      margin: 0;
+    }
+
+    html, body {
+      background: #0e1419;
+      color: var(--cream);
+      font-family: Inter, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .sheet {
+      width: 210mm;
+      height: 297mm;
+      background: var(--bg);
+      position: relative;
+      overflow: hidden;
+      page-break-after: always;
+      padding: 15mm 16mm 18mm;
+    }
+
+    .sheet:last-child { page-break-after: auto; }
+
+    .glow {
+      position: absolute;
+      pointer-events: none;
+      border-radius: 50%;
+      filter: blur(40px);
+      opacity: 0.35;
+    }
+    .glow-a {
+      width: 180mm;
+      height: 90mm;
+      right: -40mm;
+      top: -50mm;
+      background: radial-gradient(circle, rgba(31,170,255,0.28), transparent 70%);
+    }
+    .glow-b {
+      width: 140mm;
+      height: 80mm;
+      left: -50mm;
+      bottom: -30mm;
+      background: radial-gradient(circle, rgba(92,115,131,0.35), transparent 70%);
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      position: relative;
+      z-index: 2;
+    }
+
+    .logo {
+      height: 28px;
+      width: auto;
+      display: block;
+    }
+
+    .meta {
+      text-align: right;
+      font-size: 8.5px;
+      line-height: 1.45;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+    }
+    .meta b {
+      color: var(--cream);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .rule {
+      height: 1px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2) 28%, var(--line) 28%);
+      margin: 11mm 0 8mm;
+      position: relative;
+      z-index: 2;
+    }
+
+    .kicker {
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 3.5mm;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 2.5mm;
+    }
+
+    .lead {
+      font-size: 11px;
+      color: var(--muted);
+      max-width: 155mm;
+      line-height: 1.5;
+    }
+
+    .facts {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 3mm;
+      margin: 8mm 0 7mm;
+      position: relative;
+      z-index: 2;
+    }
+
+    .fact {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.025);
+      padding: 3.6mm 3.8mm 3.2mm;
+      min-height: 18mm;
+    }
+    .fact span {
+      display: block;
+      font-size: 8px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.4mm;
+    }
+    .fact strong {
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    h2 {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin: 0 0 3.2mm;
+      color: var(--cream);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9.2px;
+      position: relative;
+      z-index: 2;
+    }
+
+    thead th {
+      text-align: left;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 7.4px;
+      color: var(--muted);
+      padding: 0 2.4mm 2.4mm;
+      border-bottom: 1px solid var(--line-strong);
+    }
+
+    tbody td {
+      padding: 3.3mm 2.4mm;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      line-height: 1.4;
+    }
+
+    tbody tr:nth-child(odd) td {
+      background: rgba(255,255,255,0.018);
+    }
+
+    .num { width: 8mm; color: var(--muted); font-weight: 500; }
+    .name { width: auto; }
+    .name b { font-weight: 600; font-size: 10px; display: block; margin-bottom: 0.8mm; }
+    .name small { color: var(--muted); font-size: 8.2px; display: block; }
+    .unit, .qty, .price, .sum { text-align: right; white-space: nowrap; }
+    .unit { width: 16mm; color: var(--muted); }
+    .qty { width: 16mm; font-weight: 600; }
+    .price { width: 24mm; }
+    .sum { width: 26mm; font-weight: 600; }
+
+    .totals {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 5mm;
+      position: relative;
+      z-index: 2;
+    }
+
+    .total-card {
+      width: 92mm;
+      border: 1px solid rgba(31,170,255,0.35);
+      background: linear-gradient(180deg, rgba(31,170,255,0.10), rgba(255,255,255,0.02));
+      padding: 4.2mm 5mm 4mm;
+    }
+    .total-card .row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 9.5px;
+      color: var(--muted);
+      margin-bottom: 1.6mm;
+    }
+    .total-card .grand {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-top: 1px solid var(--line);
+      padding-top: 2.2mm;
+      margin-top: 0.4mm;
+    }
+    .total-card .grand span {
+      font-size: 9px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .total-card .grand b {
+      font-size: 20px;
+      letter-spacing: -0.03em;
+    }
+
+    .note {
+      margin-top: 6mm;
+      font-size: 8.6px;
+      color: var(--muted);
+      line-height: 1.5;
+      position: relative;
+      z-index: 2;
+    }
+
+    .footer {
+      position: absolute;
+      left: 16mm;
+      right: 16mm;
+      bottom: 11mm;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      font-size: 8px;
+      color: var(--muted);
+      z-index: 2;
+    }
+    .footer b { color: var(--cream); font-weight: 500; }
+
+    .page-n {
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4mm;
+      position: relative;
+      z-index: 2;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.02);
+      padding: 4.2mm 4.4mm 4mm;
+      min-height: 38mm;
+    }
+    .card .idx {
+      font-size: 8px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 1.6mm;
+    }
+    .card h3 {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 2mm;
+    }
+    .card p {
+      font-size: 9px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .span-2 { grid-column: 1 / -1; min-height: auto; }
+
+    .terms {
+      margin-top: 6mm;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3.2mm 8mm;
+      position: relative;
+      z-index: 2;
+    }
+    .term {
+      border-top: 1px solid var(--line);
+      padding-top: 2.8mm;
+    }
+    .term span {
+      display: block;
+      font-size: 8px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.2mm;
+      font-weight: 600;
+    }
+    .term p {
+      font-size: 9.5px;
+      line-height: 1.45;
+      color: var(--cream);
+    }
+
+    .sign {
+      margin-top: 10mm;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12mm;
+      position: relative;
+      z-index: 2;
+    }
+    .sign .box {
+      border-top: 1px solid var(--line-strong);
+      padding-top: 3mm;
+      min-height: 22mm;
+    }
+    .sign .box span {
+      font-size: 8px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .sign .box strong {
+      display: block;
+      margin-top: 6mm;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .sign .box em {
+      display: block;
+      margin-top: 1mm;
+      font-style: normal;
+      font-size: 8.5px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <section class="sheet">
+    <div class="glow glow-a"></div>
+    <div class="glow glow-b"></div>
+
+    <header class="topbar">
+      <img class="logo" src="assets/logo.svg" alt="XNR" />
+      <div class="meta">
+        <b>КП № 03-09/26</b><br />
+        от 03 сентября 2026&nbsp;г.<br />
+        взамен КП от 28.07.2026, ред.&nbsp;2
+      </div>
+    </header>
+
+    <div class="rule"></div>
+
+    <p class="kicker">Коммерческое предложение</p>
+    <h1>Перекрытие приямка.<br />Спецификация работ</h1>
+    <p class="lead">
+      Изготовление и монтаж перекрытия приямка, прессованного настила с&nbsp;болтовым
+      креплением, лестницы из профильной трубы, грунтование основания и проект
+      с&nbsp;3D-моделью. Без скрытых позиций — в спецификации только согласованный состав.
+    </p>
+
+    <div class="facts">
+      <div class="fact">
+        <span>Объект</span>
+        <strong>Гардероб.<br />Приямок</strong>
+      </div>
+      <div class="fact">
+        <span>Исполнитель</span>
+        <strong>XNR / ИП Хачатрян<br />Н.&nbsp;Р.</strong>
+      </div>
+      <div class="fact">
+        <span>Срок действия</span>
+        <strong>до 17.09.2026<br />14 календарных дней</strong>
+      </div>
+      <div class="fact">
+        <span>НДС</span>
+        <strong>Не облагается<br />УСН</strong>
+      </div>
+    </div>
+
+    <h2>Спецификация</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>№</th>
+          <th>Наименование</th>
+          <th style="text-align:right">Ед.</th>
+          <th style="text-align:right">Кол-во</th>
+          <th style="text-align:right">Цена, ₽</th>
+          <th style="text-align:right">Сумма, ₽</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="num">01</td>
+          <td class="name">
+            <b>Перекрытие в приямок</b>
+            <small>Изготовление и монтаж металлоконструкции перекрытия приямка. Состав позиции — как в КП от 28.07.2026.</small>
+          </td>
+          <td class="unit">компл.</td>
+          <td class="qty">1</td>
+          <td class="price">148&nbsp;000</td>
+          <td class="sum">148&nbsp;000</td>
+        </tr>
+        <tr>
+          <td class="num">02</td>
+          <td class="name">
+            <b>Настил 10,5&nbsp;м² из прессованного настила</b>
+            <small>Прессованный решетчатый настил. Болтовое крепление к основанию. Раскрой, комплект крепежа, монтаж.</small>
+          </td>
+          <td class="unit">м²</td>
+          <td class="qty">10,5</td>
+          <td class="price">11&nbsp;800</td>
+          <td class="sum">123&nbsp;900</td>
+        </tr>
+        <tr>
+          <td class="num">03</td>
+          <td class="name">
+            <b>Лестница в приямок из профильной трубы</b>
+            <small>Изготовление марша / стремянки из профильной трубы, антикоррозионная защита, монтаж в приямок.</small>
+          </td>
+          <td class="unit">шт.</td>
+          <td class="qty">1</td>
+          <td class="price">58&nbsp;000</td>
+          <td class="sum">58&nbsp;000</td>
+        </tr>
+        <tr>
+          <td class="num">04</td>
+          <td class="name">
+            <b>Покрытие основания грунтом ГФ</b>
+            <small>Подготовка поверхности основания и нанесение грунтовки ГФ-021.</small>
+          </td>
+          <td class="unit">компл.</td>
+          <td class="qty">1</td>
+          <td class="price">19&nbsp;500</td>
+          <td class="sum">19&nbsp;500</td>
+        </tr>
+        <tr>
+          <td class="num">05</td>
+          <td class="name">
+            <b>Проект основания приямка и 3D-модель</b>
+            <small>Рабочие чертежи основания приямка и трёхмерная модель конструкции.</small>
+          </td>
+          <td class="unit">компл.</td>
+          <td class="qty">1</td>
+          <td class="price">36&nbsp;000</td>
+          <td class="sum">36&nbsp;000</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="totals">
+      <div class="total-card">
+        <div class="row"><span>Позиций в спецификации</span><span>5</span></div>
+        <div class="row"><span>НДС</span><span>не облагается</span></div>
+        <div class="grand">
+          <span>Итого к оплате</span>
+          <b>385&nbsp;400&nbsp;₽</b>
+        </div>
+      </div>
+    </div>
+
+    <p class="note">
+      В стоимость позиций 1–4 входят изготовление, доставка по Москве и Московской области и монтаж.
+      Позиция 5 — проектные работы. Предложение действительно при сохранении исходных габаритов приямка.
+    </p>
+
+    <footer class="footer">
+      <div>
+        xnr.su&nbsp;&nbsp;·&nbsp;&nbsp;+7 (968) 334-02-38&nbsp;&nbsp;·&nbsp;&nbsp;Mark.xnr@gmail.com<br />
+        г. Москва, г. Щербинка, ул. Космонавтов, 16
+      </div>
+      <div class="page-n">Стр. 01 / 02</div>
+    </footer>
+  </section>
+
+  <section class="sheet">
+    <div class="glow glow-a"></div>
+
+    <header class="topbar">
+      <img class="logo" src="assets/logo.svg" alt="XNR" />
+      <div class="meta">
+        <b>Приложение к КП № 03-09/26</b><br />
+        Состав позиций и условия
+      </div>
+    </header>
+
+    <div class="rule"></div>
+
+    <p class="kicker">Состав работ</p>
+    <h1 style="font-size:18px; margin-bottom:6mm;">Что входит в каждую позицию</h1>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="idx">Позиция 01 · без изменений</div>
+        <h3>Перекрытие в приямок</h3>
+        <p>
+          Несущая металлоконструкция перекрытия приямка (люк): рама, перекрытие,
+          узлы опирания. Изготовление на производстве, поставка и монтаж.
+          Состав, конструктив и объём работ — как в КП от 28.07.2026, ред.&nbsp;2.
+        </p>
+      </div>
+      <div class="card">
+        <div class="idx">Позиция 02 · добавлено</div>
+        <h3>Прессованный настил 10,5&nbsp;м²</h3>
+        <p>
+          Решетчатый прессованный настил площадью 10,5&nbsp;м². Крепление к основанию
+          на болтах / клипсах. Раскрой карт под геометрию приямка, комплект метизов,
+          монтаж без сварки на объекте.
+        </p>
+      </div>
+      <div class="card">
+        <div class="idx">Позиция 03 · добавлено</div>
+        <h3>Лестница из профильной трубы</h3>
+        <p>
+          Лестница / стремянка в приямок из профильной трубы. Изготовление по месту
+          примыкания к перекрытию, обработка, монтаж. Геометрия уточняется по замерам
+          и проекту основания.
+        </p>
+      </div>
+      <div class="card">
+        <div class="idx">Позиция 04 · добавлено</div>
+        <h3>Грунт ГФ по основанию</h3>
+        <p>
+          Обезжиривание и обеспыливание металлического основания, нанесение
+          грунтовки ГФ-021 в соответствии с технологией производителя.
+          Финишная декоративная окраска в позицию не входит.
+        </p>
+      </div>
+      <div class="card span-2">
+        <div class="idx">Позиция 05 · добавлено</div>
+        <h3>Проект основания приямка и 3D-модель</h3>
+        <p>
+          Комплект: схема основания приямка, узлы крепления настила и лестницы,
+          спецификация металлопроката, 3D-модель конструкции для согласования.
+          Выдаётся до запуска производства позиций 2–4.
+        </p>
+      </div>
+    </div>
+
+    <div class="terms">
+      <div class="term">
+        <span>Срок</span>
+        <p>Проект — 3–5 рабочих дней. Изготовление — 12–15 рабочих дней после согласования и предоплаты. Монтаж — 1 рабочий день.</p>
+      </div>
+      <div class="term">
+        <span>Оплата</span>
+        <p>70% — предоплата для запуска производства. 30% — по акту выполненных работ в день монтажа.</p>
+      </div>
+      <div class="term">
+        <span>Гарантия</span>
+        <p>10 лет на металлокаркас. Монтаж без сварки на объекте, детали подгоняются на производстве.</p>
+      </div>
+      <div class="term">
+        <span>Не входит</span>
+        <p>Бетонные / земляные работы по приямку, демонтаж существующих конструкций, финишная окраска поверх грунта ГФ, скрытые работы по объекту.</p>
+      </div>
+    </div>
+
+    <div class="sign">
+      <div class="box">
+        <span>Исполнитель</span>
+        <strong>ИП Хачатрян Нарек Радикович</strong>
+        <em>ИНН 345500577127&nbsp;&nbsp;·&nbsp;&nbsp;ОГРНИП 323344300109892</em>
+      </div>
+      <div class="box">
+        <span>Заказчик</span>
+        <strong>_______________________________</strong>
+        <em>подпись, расшифровка, дата</em>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div>
+        Пн–Вс 09:00–19:00&nbsp;&nbsp;·&nbsp;&nbsp;xnr.su&nbsp;&nbsp;·&nbsp;&nbsp;Щербинка, ул. Космонавтов, 16
+      </div>
+      <div class="page-n">Стр. 02 / 02</div>
+    </footer>
+  </section>
+</body>
+</html>
