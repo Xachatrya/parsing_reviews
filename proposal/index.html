@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Коммерческое предложение — Fitumi</title>
+  <style>
+    @font-face {
+      font-family: "Inter Fitumi";
+      src: url("fonts/Inter-Regular.otf") format("opentype");
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: "Inter Fitumi";
+      src: url("fonts/Inter-Medium.otf") format("opentype");
+      font-weight: 500;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: "Inter Fitumi";
+      src: url("fonts/Inter-SemiBold.otf") format("opentype");
+      font-weight: 600;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: "Inter Fitumi";
+      src: url("fonts/Inter-Bold.otf") format("opentype");
+      font-weight: 700;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: "Inter Fitumi";
+      src: url("fonts/Inter-ExtraBold.otf") format("opentype");
+      font-weight: 800;
+      font-style: normal;
+    }
+
+    :root {
+      --bg: #0a0a0a;
+      --ink: #f6f8fa;
+      --muted: rgba(217, 217, 217, 0.8);
+      --steel: #becded;
+      --steel-dim: rgba(191, 206, 236, 0.16);
+      --cyan: #22d3ee;
+      --line: #1f2027;
+      --card: #101013;
+    }
+
+    * { box-sizing: border-box; }
+
+    @page {
+      size: A4;
+      margin: 0;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #050507;
+      color: var(--ink);
+      font-family: "Inter Fitumi", Inter, sans-serif;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .toolbar {
+      max-width: 210mm;
+      margin: 18px auto 0;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .toolbar a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 42px;
+      padding: 0 22px;
+      border-radius: 100px;
+      background: var(--steel);
+      color: var(--bg);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .sheet {
+      width: 210mm;
+      height: 297mm;
+      margin: 16px auto 28px;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(900px 420px at 8% -10%, rgba(31, 170, 255, 0.16), transparent 58%),
+        radial-gradient(700px 380px at 100% 0%, rgba(106, 254, 254, 0.06), transparent 50%),
+        var(--bg);
+      color: var(--ink);
+    }
+
+    .sheet::before {
+      content: "";
+      position: absolute;
+      inset: 10mm;
+      border: 1px solid rgba(191, 206, 236, 0.14);
+      pointer-events: none;
+    }
+
+    .corner {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-color: var(--cyan);
+      border-style: solid;
+      opacity: 0.85;
+    }
+    .corner.tl { top: 8mm; left: 8mm; border-width: 1.5px 0 0 1.5px; }
+    .corner.tr { top: 8mm; right: 8mm; border-width: 1.5px 1.5px 0 0; }
+    .corner.bl { bottom: 8mm; left: 8mm; border-width: 0 0 1.5px 1.5px; }
+    .corner.br { bottom: 8mm; right: 8mm; border-width: 0 1.5px 1.5px 0; }
+
+    .inner {
+      position: relative;
+      height: 100%;
+      padding: 16mm 16mm 14mm;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand svg { display: block; flex: 0 0 auto; }
+
+    .word {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .word strong {
+      font-size: 26px;
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      color: #f6f8fa;
+    }
+
+    .word span {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--steel);
+      font-weight: 500;
+    }
+
+    .meta {
+      text-align: right;
+      padding-top: 2px;
+    }
+
+    .meta .kicker {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--steel);
+      font-weight: 600;
+    }
+
+    .meta .num {
+      margin-top: 6px;
+      font-size: 13px;
+      color: var(--ink);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .meta .date {
+      margin-top: 2px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .rule {
+      height: 1px;
+      margin: 14px 0 16px;
+      background: linear-gradient(90deg, #6afefe, #1faaff 28%, rgba(191, 206, 236, 0.25) 70%, transparent);
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 150mm;
+      font-size: 34px;
+      line-height: 1.05;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #f6f8fa;
+    }
+
+    .lead {
+      margin: 12px 0 0;
+      max-width: 168mm;
+      font-size: 13.5px;
+      line-height: 1.45;
+      font-weight: 400;
+      color: var(--muted);
+    }
+
+    .section-label {
+      margin: 18px 0 8px;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      font-weight: 600;
+    }
+
+    ol.spec {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      border-top: 1px solid var(--line);
+    }
+
+    ol.spec li {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 7px 0 7px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    ol.spec .idx {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--cyan);
+      font-variant-numeric: tabular-nums;
+      padding-top: 1px;
+    }
+
+    ol.spec p {
+      margin: 0;
+      font-size: 12.5px;
+      line-height: 1.35;
+      color: #f6f8fa;
+      font-weight: 500;
+    }
+
+    table.cost {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    table.cost td {
+      padding: 8px 0;
+      border-bottom: 1px solid var(--line);
+      font-size: 14px;
+      vertical-align: baseline;
+    }
+
+    table.cost td.name {
+      color: #f6f8fa;
+      font-weight: 500;
+    }
+
+    table.cost td.sum {
+      text-align: right;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      color: #f6f8fa;
+    }
+
+    .total {
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 58px;
+      padding: 12px 26px;
+      border-radius: 100px;
+      background: #becded;
+      color: #0a0a0a;
+    }
+
+    .total span {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .total strong {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .paynote {
+      margin: 8px 4px 0;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .notes {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .notes div {
+      padding: 12px 14px 13px;
+      border: 1px solid var(--line);
+      background: rgba(16, 16, 19, 0.72);
+    }
+
+    .notes b {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--steel);
+    }
+
+    .notes span {
+      display: block;
+      font-size: 12px;
+      line-height: 1.35;
+      font-weight: 500;
+      color: #f6f8fa;
+    }
+
+    footer {
+      margin-top: auto;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 18px;
+      padding-top: 14px;
+    }
+
+    .person .role {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--steel);
+      font-weight: 600;
+    }
+
+    .person .name {
+      margin-top: 4px;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .person .phone {
+      margin-top: 2px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #f6f8fa;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.01em;
+    }
+
+    .aside {
+      text-align: right;
+      max-width: 78mm;
+      font-size: 11px;
+      line-height: 1.4;
+      color: var(--muted);
+    }
+
+    @media print {
+      html, body { background: #0a0a0a; }
+      .toolbar { display: none !important; }
+      .sheet { margin: 0; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <a href="Fitumi-kommercheskoe-predlozhenie.pdf" download>Скачать PDF</a>
+  </div>
+
+  <article class="sheet">
+    <i class="corner tl"></i>
+    <i class="corner tr"></i>
+    <i class="corner bl"></i>
+    <i class="corner br"></i>
+
+    <div class="inner">
+      <header>
+        <div class="brand">
+          <svg width="46" height="46" viewBox="0 0 46 46" fill="none" aria-hidden="true">
+            <defs>
+              <radialGradient id="steel" cx="0" cy="0" r="1" gradientTransform="rotate(41 -4 28) scale(26 28)" gradientUnits="userSpaceOnUse">
+                <stop offset="0.21" stop-color="#5C7383"/>
+                <stop offset="0.5" stop-color="#788C9C"/>
+                <stop offset="1" stop-color="#A7B5C8"/>
+              </radialGradient>
+              <radialGradient id="dark" cx="0" cy="0" r="1" gradientTransform="rotate(-43 28 -6) scale(26 28)" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#0E1419"/>
+                <stop offset="0.36" stop-color="#191D1F"/>
+                <stop offset="1" stop-color="#2C3340"/>
+              </radialGradient>
+              <linearGradient id="cyan" x1="6" y1="34" x2="40" y2="8" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#151F8F"/>
+                <stop offset="0.4" stop-color="#1956DD"/>
+                <stop offset="0.72" stop-color="#1FAAFF"/>
+                <stop offset="1" stop-color="#6AFEFE"/>
+              </linearGradient>
+            </defs>
+            <rect x="3.5" y="3.5" width="15" height="39" rx="7.5" fill="url(#steel)"/>
+            <rect x="11" y="3.5" width="31.5" height="14.5" rx="7.2" fill="url(#dark)"/>
+            <rect x="11" y="20.2" width="23.5" height="11.2" rx="5.6" fill="url(#cyan)"/>
+          </svg>
+          <div class="word">
+            <strong>FITUMI</strong>
+            <span>Металлоконструкции</span>
+          </div>
+        </div>
+        <div class="meta">
+          <div class="kicker">Коммерческое предложение</div>
+          <div class="num">№ ФТ-1211</div>
+          <div class="date">12 ноября 2026</div>
+        </div>
+      </header>
+
+      <div class="rule"></div>
+
+      <h1>Изготовление и монтаж металлоконструкции</h1>
+      <p class="lead">Проект, производство и монтаж металлоконструкции. Профиль обрабатывается на станках ЧПУ лазерной резки, узлы проходят предварительную сборку на производстве. Оплата — безналичный расчёт.</p>
+
+      <div class="section-label">Спецификация</div>
+      <ol class="spec">
+        <li>
+          <span class="idx">01</span>
+          <p>Металлокаркас из профильной трубы 140×140×4</p>
+        </li>
+        <li>
+          <span class="idx">02</span>
+          <p>Опорные стойки из трубы 100×100×5</p>
+        </li>
+        <li>
+          <span class="idx">03</span>
+          <p>Сборка металлоконструкции (узлы крепления): болтовое соединение болтами М14 / сварное соединение</p>
+        </li>
+        <li>
+          <span class="idx">04</span>
+          <p>Узлы крепления к стенам: химический анкер «Титан», шпилька М12, гайки М12</p>
+        </li>
+        <li>
+          <span class="idx">05</span>
+          <p>Узлы крепления к бетонному полу: химический анкер, шпилька</p>
+        </li>
+        <li>
+          <span class="idx">06</span>
+          <p>Антикоррозийная обработка: ГФ-21</p>
+        </li>
+        <li>
+          <span class="idx">07</span>
+          <p>Предварительная обработка металлоконструкции с помощью станков ЧПУ лазерной резки</p>
+        </li>
+        <li>
+          <span class="idx">08</span>
+          <p>Предварительная сборка (сварка, зачистка) на производстве</p>
+        </li>
+      </ol>
+
+      <div class="section-label">Стоимость, безналичный расчёт</div>
+      <table class="cost">
+        <tbody>
+          <tr>
+            <td class="name">Изготовление</td>
+            <td class="sum">1&nbsp;781&nbsp;000&nbsp;₽</td>
+          </tr>
+          <tr>
+            <td class="name">Монтаж</td>
+            <td class="sum">173&nbsp;000&nbsp;₽</td>
+          </tr>
+          <tr>
+            <td class="name">Проект металлоконструкции</td>
+            <td class="sum">200&nbsp;000&nbsp;₽</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="total">
+        <span>Итого</span>
+        <strong>2&nbsp;154&nbsp;000&nbsp;₽</strong>
+      </div>
+      <p class="paynote">Форма оплаты — безналичный расчёт. Суммы указаны в рублях РФ.</p>
+
+      <div class="notes">
+        <div>
+          <b>Каркас</b>
+          <span>Профильная труба 140×140×4 и стойки 100×100×5</span>
+        </div>
+        <div>
+          <b>Узлы</b>
+          <span>Болты М14 и сварка, анкер «Титан», шпилька М12</span>
+        </div>
+        <div>
+          <b>Производство</b>
+          <span>ЧПУ-лазер, сборка и зачистка, грунт ГФ-21</span>
+        </div>
+      </div>
+
+      <footer>
+        <div class="person">
+          <div class="role">Контакт</div>
+          <div class="name">Станислав Середа</div>
+          <div class="phone">+7 912 038 6670</div>
+        </div>
+        <div class="aside">
+          Состав работ и стоимость соответствуют спецификации этого предложения.
+        </div>
+      </footer>
+    </div>
+  </article>
+</body>
+</html>
